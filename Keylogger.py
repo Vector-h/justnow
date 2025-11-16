@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Simple ethical keylogger for lab use.
 Toggle logging: Ctrl+Shift+Q
@@ -53,9 +53,7 @@ class KeyLogger:
             self.listener.stop()
 
 def hotkey_worker(klogger):
-    # Hotkey definitions:
-    # Ctrl+Shift+Q -> toggle logging
-    # Ctrl+Shift+E -> quit
+
     from pynput.keyboard import GlobalHotKeys
 
     with GlobalHotKeys({
