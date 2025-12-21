@@ -1,10 +1,3 @@
-
-"""
-Simple ethical keylogger for lab use.
-Toggle logging: Ctrl+Shift+Q
-Quit program:   Ctrl+Shift+E
-"""
-
 from pynput import keyboard
 from datetime import datetime
 import threading
