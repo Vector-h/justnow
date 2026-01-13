@@ -6,45 +6,48 @@ from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 import time
 
-chrome_options = Options()
-chrome_options.add_argument("--headless")  # Run browser in background
-chrome_options.add_argument("--window-size=1920,1080")
-chrome_options.add_argument("--disable-gpu")
+options = Options()
+options.add_argument("--headless")  # remove this line if you want to SEE the browser
+options.add_argument("--window-size=1920,1080")
 
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=chrome_options)
+driver = webdriver.Chrome(
+    service=Service(ChromeDriverManager().install()),
+    options=options
+)
 
 url = "https://www.imdb.com/chart/top/"
 driver.get(url)
-
-
 time.sleep(5)
+-
+rows = driver.find_elements(By.CSS_SELECTOR, "ul.ipc-metadata-list li")
 
+movie_list = []
 
-movies = driver.find_elements(By.XPATH, '//li[contains(@class,"ipc-metadata-list-summary-item")]')
-
-movie_data = []
-
-rank = 1
-for movie in movies:
+for index, row in enumerate(rows, start=1):
     try:
-        title = movie.find_element(By.XPATH, './/h3').text
-        rating = movie.find_element(By.XPATH, './/span[contains(@class,"ipc-rating-star")]').text
+        title = row.find_element(By.CSS_SELECTOR, "h3").text
+        year = row.find_element(By.CSS_SELECTOR, "span.ipc-inline-list__item").text
+        rating = row.find_element(By.CSS_SELECTOR, "span.ipc-rating-star").text
 
-        movie_data.append({
-            "Rank": rank,
-            "Movie Title": title,
+        movie_list.append({
+            "Rank": index,
+            "Title": title,
+            "Year": year,
             "IMDb Rating": rating
         })
 
-        rank += 1
-    except Exception as e:
-        print("Error extracting movie:", e)
+        print(f"{index}. {title} ({year}) - Rating: {rating}")
 
-df = pd.DataFrame(movie_data)
+    except Exception:
+        continue
+
+# -------------------------------
+# Save to CSV
+# -------------------------------
+df = pd.DataFrame(movie_list)
 df.to_csv("imdb_top_250_movies.csv", index=False)
-
 
 driver.quit()
 
-print("IMDb Top 250 Movies scraped successfully!")
+print("\nIMDb movie list extracted successfully!")
+print(f" Total movies scraped: {len(movie_list)}")
