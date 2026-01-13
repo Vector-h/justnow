@@ -18,7 +18,7 @@ driver = webdriver.Chrome(
 url = "https://www.imdb.com/chart/top/"
 driver.get(url)
 time.sleep(5)
--
+
 rows = driver.find_elements(By.CSS_SELECTOR, "ul.ipc-metadata-list li")
 
 movie_list = []
@@ -41,9 +41,7 @@ for index, row in enumerate(rows, start=1):
     except Exception:
         continue
 
-# -------------------------------
-# Save to CSV
-# -------------------------------
+
 df = pd.DataFrame(movie_list)
 df.to_csv("imdb_top_250_movies.csv", index=False)
 
