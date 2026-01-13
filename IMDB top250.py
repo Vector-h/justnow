@@ -7,7 +7,7 @@ import pandas as pd
 import time
 
 options = Options()
-options.add_argument("--headless")  # remove this line if you want to SEE the browser
+options.add_argument("--headless")  
 options.add_argument("--window-size=1920,1080")
 
 driver = webdriver.Chrome(
