@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 
-# -------------------- CHROME OPTIONS --------------------
+
 options = Options()
 options.add_argument("--headless=new")
 options.add_argument("--window-size=1920,1080")
@@ -19,7 +19,6 @@ options.add_argument(
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 )
 
-# -------------------- DRIVER SETUP --------------------
 driver = webdriver.Chrome(
     service=Service(ChromeDriverManager().install()),
     options=options
@@ -28,7 +27,6 @@ driver = webdriver.Chrome(
 url = "https://www.imdb.com/chart/top/"
 driver.get(url)
 
-# -------------------- WAIT FOR MOVIES TO LOAD --------------------
 wait = WebDriverWait(driver, 15)
 wait.until(
     EC.presence_of_element_located(
@@ -40,7 +38,6 @@ rows = driver.find_elements(By.CSS_SELECTOR, "ul.ipc-metadata-list li")
 
 movie_list = []
 
-# -------------------- DATA EXTRACTION --------------------
 for index, row in enumerate(rows, start=1):
     try:
         title = row.find_element(By.CSS_SELECTOR, "h3").text
@@ -64,8 +61,6 @@ for index, row in enumerate(rows, start=1):
     except:
         continue
 
-
-# -------------------- SAVE TO CSV --------------------
 df = pd.DataFrame(movie_list)
 df.to_csv("imdb_top_250_movies.csv", index=False, encoding="utf-8")
 
